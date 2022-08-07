@@ -14,7 +14,7 @@ function App() {
   return (
     <Layuot>
       <Routes>
-        <Route path='/' element={<MainPage />} />
+        <Route path='/' index element={<MainPage />} />
         <Route path='posts' element={<PostsPage />} />
         <Route path=':id' element={<PostPage />} />
         <Route path=':id/edit' element={<EditPostPage />} />
