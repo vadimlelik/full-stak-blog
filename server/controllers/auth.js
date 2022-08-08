@@ -26,6 +26,7 @@ export const register = async (req, res) => {
             username,
             password: hash,
         })
+
         const token = jwt.sign({
             id: newUser._id
 
@@ -70,7 +71,7 @@ export const login = async (req, res) => {
 
 
         res.json({
-            token, user, message: 'вы вошли в систему '
+            token, user, message: ' Вы вошли в систему '
         })
 
     } catch (error) {
