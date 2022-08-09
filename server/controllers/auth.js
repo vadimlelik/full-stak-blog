@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken'
 // registration user
 
 
-
 export const register = async (req, res) => {
     try {
         const { username, password } = req.body
@@ -27,19 +26,21 @@ export const register = async (req, res) => {
             password: hash,
         })
 
-        const token = jwt.sign({
-            id: newUser._id
+        const token = jwt.sign(
+            {
+                id: newUser._id,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '30d' },
+        )
 
-        }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
 
         await newUser.save()
 
-
-
         res.json({
-            token,
             newUser,
+            token,
             message: 'Регистрация прошла успешно.',
         })
     } catch (error) {
@@ -54,34 +55,44 @@ export const login = async (req, res) => {
 
         if (!user) {
             return res.json({
-                message: 'Такого юзера не существует'
+                message: 'Такого юзера не существует.',
             })
         }
 
-        const isPassword = await bcrypt.compare(password, user.password)
+        const isPasswordCorrect = await bcrypt.compare(password, user.password)
 
-        if (!isPassword) {
-            return res.json({ message: 'Не верный пароль ' })
+        if (!isPasswordCorrect) {
+            return res.json({
+                message: 'Неверный пароль.',
+            })
         }
 
-        const token = jwt.sign({
-            id: user._id
+        const token = jwt.sign(
+            {
+                id: user._id,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '30d' },
+        )
 
-        }, process.env.JWT_SECRET, { expiresIn: '30d' })
-
+        console.log(token);
 
         res.json({
-            token, user, message: ' Вы вошли в систему '
+            token,
+            user,
+            message: 'Вы вошли в систему.',
         })
-
     } catch (error) {
-        res.json({ message: 'Ошибка при входе в  систему' })
+        res.json({ message: 'Ошибка при авторизации.' })
     }
 }
+
+
 export const getMe = async (req, res) => {
     try {
 
-        const user = await User.findOne(req.userId)
+
+        const user = await User.findById(req.userId)
 
         if (!user) {
             return res.json({ messahe: ' такого юзера не существует' })
@@ -94,13 +105,13 @@ export const getMe = async (req, res) => {
 
 
         res.json({
-            token, user, message: 'вы вошли в систему '
+            token, user
         })
 
 
     } catch (error) {
         res.json({
-            message: 'нет доступа'
+            message: 'Все плохо нет доступа'
         })
     }
 }

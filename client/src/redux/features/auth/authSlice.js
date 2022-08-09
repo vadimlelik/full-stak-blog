@@ -54,13 +54,7 @@ export const getMe = createAsyncThunk(
 	'auth/getMe', async () => {
 
 		try {
-			const { data } = await axios.post('auth/me')
-
-
-			if (data.token) {
-				window.localStorage.setItem('token', data.token)
-			}
-
+			const { data } = await axios.get('auth/me')
 			return data
 
 		} catch (error) {
@@ -73,7 +67,12 @@ export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-
+		logout: (state) => {
+			state.user = null
+			state.token = null
+			state.status = null
+			state.isLoading = false
+		}
 	},
 	extraReducers: {
 		[registerUser.pending]: (state) => {
@@ -81,6 +80,7 @@ export const authSlice = createSlice({
 			state.status = null
 		},
 		[registerUser.fulfilled]: (state, action) => {
+			console.log(action);
 			state.isLoading = false
 			state.status = action.payload.message
 			state.user = action.payload.user
@@ -107,17 +107,17 @@ export const authSlice = createSlice({
 		},
 		// проверка авторизации
 
-		[loginUser.pending]: (state) => {
+		[getMe.pending]: (state) => {
 			state.isLoading = true
 			state.status = null
 		},
-		[loginUser.fulfilled]: (state, action) => {
+		[getMe.fulfilled]: (state, action) => {
 			state.isLoading = false
 			state.status = null
 			state.user = action.payload?.user
 			state.token = action.payload?.token
 		},
-		[loginUser.rejectWithValue]: (state, action) => {
+		[getMe.rejectWithValue]: (state, action) => {
 			state.status = action.payload.message
 			state.isLoading = false
 		}
@@ -125,5 +125,8 @@ export const authSlice = createSlice({
 	}
 })
 
+export const checkAuth = (state) => Boolean(state.auth.token)
+
+export const { logout } = authSlice.actions
 
 export default authSlice.reducer
