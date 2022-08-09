@@ -4,8 +4,9 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import fileUpload from 'express-fileupload'
 import authRoute from './routes/auth.js'
+import postRoute from './routes/posts.js'
 
-import UserSchema from "./models/User.js";
+
 
 
 const app = express()
@@ -24,7 +25,8 @@ app.use(express.static('uploads'))
 
 
 // routes
-app.use('/api/auth',authRoute)
+app.use('/api/auth', authRoute)
+app.use('/api/posts', postRoute)
 
 const start = async () => {
 
