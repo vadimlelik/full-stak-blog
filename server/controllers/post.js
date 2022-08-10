@@ -1,50 +1,47 @@
-import Post from '../models/Post';
-import User from '../models/User'
+import Post from '../models/Post.js';
+import User from '../models/User.js'
 import path, { dirname } from 'path'
-import { fileURLtoPath } from 'url'
+import { fileURLToPath } from 'url'
 
 export const createPost = async (req, res) => {
 	try {
 		const { title, text } = req.body
-		const user = await Post.findById(req.userId)
+		const user = await User.findById(req.userId)
 
 		if (req.files) {
 			let fileName = Date.now().toString() + req.files.image.name
-			const __dirname = dirname(fileURLtoPath(import.meta.url))
+			const __dirname = dirname(fileURLToPath(import.meta.url))
 			req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
 
-			const newPostsWithImage = new Post({
+			const newPostWithImage = new Post({
 				username: user.username,
 				title,
 				text,
 				imgUrl: fileName,
-				author: req.userId
-
+				author: req.userId,
 			})
 
-			await newPostsWithImage.save()
+			await newPostWithImage.save()
 			await User.findByIdAndUpdate(req.userId, {
-				$push: { posts: newPostsWithImage }
+				$push: { posts: newPostWithImage },
 			})
 
-			return res.json(newPostsWithImage)
+			return res.json(newPostWithImage)
 		}
+
 		const newPostWithoutImage = new Post({
 			username: user.username,
 			title,
 			text,
-			imgUrl: ' ',
-			author: req.userId
+			imgUrl: '',
+			author: req.userId,
 		})
 		await newPostWithoutImage.save()
 		await User.findByIdAndUpdate(req.userId, {
-			$push: { posts: newPostWithoutImage }
+			$push: { posts: newPostWithoutImage },
 		})
-
-		return res.json(newPostWithoutImage)
-
-
+		res.json(newPostWithoutImage)
 	} catch (error) {
-		res.json({ message: 'что-та пошло не так ' })
+		res.json({ message: 'Что-то пошло не так.' })
 	}
 }

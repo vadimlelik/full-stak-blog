@@ -80,7 +80,6 @@ export const authSlice = createSlice({
 			state.status = null
 		},
 		[registerUser.fulfilled]: (state, action) => {
-			console.log(action);
 			state.isLoading = false
 			state.status = action.payload.message
 			state.user = action.payload.user
