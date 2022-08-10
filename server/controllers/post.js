@@ -2,6 +2,7 @@ import Post from '../models/Post.js';
 import User from '../models/User.js'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { json } from 'express';
 
 export const createPost = async (req, res) => {
 	try {
@@ -44,4 +45,20 @@ export const createPost = async (req, res) => {
 	} catch (error) {
 		res.json({ message: 'Что-то пошло не так.' })
 	}
+}
+
+export const getAll = async (req, res) => {
+	try {
+
+		const posts = await Post.find().sort('-createdAt')
+		const popularPosts = await Post.find().limit(4).sort("views")
+		if (!posts) {
+			return res.json({ message: "постов нет" })
+		}
+		res.json({ posts, popularPosts })
+
+	} catch (error) {
+		res.json({ message: 'что-та пошло не так ' })
+	}
+
 }
