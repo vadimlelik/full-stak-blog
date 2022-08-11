@@ -62,3 +62,19 @@ export const getAll = async (req, res) => {
 	}
 
 }
+
+export const getPostsById = async (req, res) => {
+
+	try {
+		const { params } = req
+
+		const postById = Post.findByIdAndUpdate(params.id, {
+			$inc: { views: 1 }
+		})
+		res.json(postById)
+
+	} catch (error) {
+		res.json({ message: error })
+	}
+
+}
