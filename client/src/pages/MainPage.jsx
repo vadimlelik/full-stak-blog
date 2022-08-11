@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PopularPost from "../components/PopularPost";
 import PostsItem from "../components/PostsItem";
 import { getAllPosts } from "../redux/features/post/postSlice";
 
@@ -21,12 +22,15 @@ const MainPage = () => {
         <div className="flex flex-col gap-10 basis-4/5">
           {posts.map((post) => {
             console.log(post);
-            return <PostsItem />;
+            return <PostsItem key={post._id} post={post} />;
           })}
         </div>
 
         <div className="basis-1/5">
           <div className="text-xs uppercase text-white">Популярное:</div>
+          {popularPosts.map((popPost) => (
+            <PopularPost key={popPost._id} popPost={popPost} />
+          ))}
         </div>
       </div>
     </div>
