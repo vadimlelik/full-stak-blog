@@ -6,7 +6,7 @@ import { AiFillEye, AiOutlineMessage } from "react-icons/ai";
 
 const PostItem = ({ post }) => {
   return (
-    <Link to={`post/${post._id}`}>
+    <Link to={`/${post._id}`}>
       <div className="flex flex-col basis-1/4 flex-grow">
         <div
           className={post.imgUrl ? "flex rouded-sm h-80" : "flex rounded-sm"}

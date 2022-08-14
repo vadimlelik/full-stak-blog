@@ -58,23 +58,37 @@ export const getAll = async (req, res) => {
 		res.json({ posts, popularPosts })
 
 	} catch (error) {
-		res.json({ message: 'что-та пошло не так ' })
+		res.json({ message: 'что-та пошло не так' })
 	}
 
 }
-
-export const getPostsById = async (req, res) => {
-
+export const getById = async (req, res) => {
 	try {
-		const { params } = req
-
-		const postById = Post.findByIdAndUpdate(params.id, {
-			$inc: { views: 1 }
+		const post = await Post.findByIdAndUpdate(req.params.id, {
+			$inc: { views: 1 },
 		})
-		res.json(postById)
+		res.json(post)
+	} catch (error) {
+		res.json({ message: 'Что-то пошло не так.' })
+	}
+}
+
+export const getMyPosts = async (req, res) => {
+	try {
+
+		const user = await User.findById(req.userId)
+
+		const list = await Promise.all(user.posts.map((post) => {
+			return Post.findById(post._id)
+		}))
+
+		console.log(list, 'list');
+
+
+
+		res.json(list)
 
 	} catch (error) {
-		res.json({ message: error })
+		res.json({ message: 'что та пошло не так 213131 ' })
 	}
-
 }

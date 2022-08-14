@@ -21,7 +21,6 @@ const MainPage = () => {
       <div className="flex justify-between gap-8">
         <div className="flex flex-col gap-10 basis-4/5">
           {posts.map((post) => {
-            console.log(post);
             return <PostsItem key={post._id} post={post} />;
           })}
         </div>
