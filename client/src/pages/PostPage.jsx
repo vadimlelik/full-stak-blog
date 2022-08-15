@@ -6,9 +6,12 @@ import Moment from "react-moment";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const PostPage = () => {
   const [post, setPosts] = useState(null);
+  const { user } = useSelector((state) => state.auth);
+  console.log(user);
   const params = useParams();
 
   const fetchPost = useCallback(async () => {
@@ -27,7 +30,7 @@ const PostPage = () => {
   return (
     <div>
       <button className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4">
-        <Link to={"/"}> to back</Link>
+        <Link to={"/"}> go back</Link>
       </button>
 
       <div className="flex gap-100 py-8">
@@ -58,6 +61,7 @@ const PostPage = () => {
             <p className="text-white opacity-60 text-xs pt-4 line-clamp-4">
               {post.text}
             </p>
+            <button>Удалить </button>
 
             <div className="flex gap-3 items-center mt-2">
               <button className="flex items-center justify-center gap-2 text-xs text-white opacity-50">

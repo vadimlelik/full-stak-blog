@@ -30,6 +30,7 @@ const PostItem = ({ post }) => {
         <p className="text-white opacity-60 text-xs pt-4 line-clamp-4">
           {post.text}
         </p>
+        <button>Удалить </button>
 
         <div className="flex gap-3 items-center mt-2">
           <button className="flex items-center justify-center gap-2 text-xs text-white opacity-50">

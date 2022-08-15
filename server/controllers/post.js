@@ -82,13 +82,26 @@ export const getMyPosts = async (req, res) => {
 			return Post.findById(post._id)
 		}))
 
-		console.log(list, 'list');
-
-
-
 		res.json(list)
 
 	} catch (error) {
 		res.json({ message: 'что та пошло не так 213131 ' })
+	}
+}
+
+export const removePost = async (req, res) => {
+	try {
+		const post = await Post.findByIdAndDelete(req.params.id)
+		if (!post) {
+			return res.json({ message: 'даннго поста не существует ' })
+		}
+
+		await User.findByIdAndUpdate(req.userId, {
+			$pull: { posts: req.params.id }
+		})
+
+		req.json({ message: 'Post in delete' })
+	} catch (error) {
+		res.json({ message: error })
 	}
 }

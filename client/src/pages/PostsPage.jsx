@@ -5,10 +5,9 @@ import PostItem from "../components/PostsItem.jsx";
 
 const PostsPage = () => {
   const [posts, setPosts] = useState([]);
-  console.log(posts);
+
   const fetchPosts = async () => {
     const { data } = await axios.get("/posts/user/me");
-    console.log(data);
     setPosts(data);
   };
 

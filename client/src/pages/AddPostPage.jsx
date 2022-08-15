@@ -14,6 +14,7 @@ const AddPostPage = () => {
   const submitHandler = () => {
     try {
       const data = new FormData();
+      console.log(data);
       data.append("title", title);
       data.append("text", text);
       data.append("image", image);
