@@ -2,7 +2,6 @@ import Post from '../models/Post.js';
 import User from '../models/User.js'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { json } from 'express';
 
 export const createPost = async (req, res) => {
 	try {
@@ -101,6 +100,33 @@ export const removePost = async (req, res) => {
 		})
 
 		req.json({ message: 'Post in delete' })
+	} catch (error) {
+		res.json({ message: error })
+	}
+}
+
+
+export const updatePost = async (req, res) => {
+	try {
+
+		const { title, text, id } = req.body
+		const post = await Post.findById(id)
+
+		if (req.file) {
+			let fileName = Date.now().toString() + req.file.image.name
+			const __dirname = dirname(fileURLToPath(import.meta.url))
+			req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
+			post.imgUrl = fileName || ''
+
+		}
+
+		post.title = title
+		post.text = text
+
+		await post.save()
+
+		res.json(post)
+
 	} catch (error) {
 		res.json({ message: error })
 	}

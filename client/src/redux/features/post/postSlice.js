@@ -30,7 +30,7 @@ export const getAllPosts = createAsyncThunk(
 export const removePost = createAsyncThunk(
 	'post/removePost', async (id) => {
 		try {
-			const { data } = await axios.delete('/posts' + id, id)
+			const { data } = await axios.delete('/posts/' + id, id)
 			return data
 
 		} catch (error) {
@@ -75,7 +75,7 @@ export const postSlice = createSlice({
 		},
 		[removePost.fulfilled]: (state, action) => {
 			state.isLoading = false
-			state.posts = state.filter(post => post._id !== action.payload._id)
+			state.posts = state.posts.filter(post => post._id !== action.payload._id)
 		},
 		[removePost.rejected]: (state, action) => {
 			state.isLoading = false
