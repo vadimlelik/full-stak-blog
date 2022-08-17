@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "../utils/axios";
 import { useEffect } from "react";
+import { updatePost } from "../redux/features/post/postSlice";
 
 const EditPostPage = () => {
   const [oldImage, setoldImage] = useState("");
@@ -18,6 +19,7 @@ const EditPostPage = () => {
   const fetchPost = useCallback(async () => {
     const { data } = await axios.get(`/posts/${params.id}`);
     const { title, text, imgUrl } = data;
+
     setTitle(title);
     setText(text);
     setoldImage(imgUrl);
@@ -31,7 +33,21 @@ const EditPostPage = () => {
     setTitle("");
     setText("");
   };
-  const submitHandler = () => {};
+  const submitHandler = () => {
+    try {
+      const updatePosts = new FormData();
+
+      updatePosts.append("title", title);
+      updatePosts.append("text", text);
+      updatePosts.append("id", params.id);
+      updatePosts.append("image", newImage);
+      console.log(updatePosts);
+
+      dispatch(updatePost(updatePosts));
+
+      navigate("/posts");
+    } catch (error) {}
+  };
 
   return (
     <form className="w-1/3 mx-auto py-10" onSubmit={(e) => e.preventDefault()}>
@@ -78,7 +94,7 @@ const EditPostPage = () => {
           onClick={submitHandler}
           className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4"
         >
-          Добавить
+          Обновить
         </button>
 
         <button

@@ -112,8 +112,8 @@ export const updatePost = async (req, res) => {
 		const { title, text, id } = req.body
 		const post = await Post.findById(id)
 
-		if (req.file) {
-			let fileName = Date.now().toString() + req.file.image.name
+		if (req.files) {
+			let fileName = Date.now().toString() + req.files.image.name
 			const __dirname = dirname(fileURLToPath(import.meta.url))
 			req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
 			post.imgUrl = fileName || ''
