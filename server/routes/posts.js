@@ -22,4 +22,6 @@ router.delete('/:id', checkAuth, removePost)
 // get updatePost
 router.put('/:id', checkAuth, updatePost)
 
+
+
 export default router

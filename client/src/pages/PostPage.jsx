@@ -76,9 +76,7 @@ const PostPage = () => {
               </div>
             </div>
             <div className="text-white text-xl">{post.title}</div>
-            <p className="text-white opacity-60 text-xs pt-4 line-clamp-4">
-              {post.text}
-            </p>
+            <p className="text-white opacity-60 text-xs pt-4 ">{post.text}</p>
 
             <div className="flex gap-3 items-center mt-2 justify-between">
               <div className="flex gap-3 mt-4">
@@ -108,7 +106,9 @@ const PostPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-1/3">comments</div>
+        <div className="w-1/3 bg-gray-700 flex flex-col gap-2 rounded-sm ">
+          <form className="flex gap-2 "></form>
+        </div>
       </div>
     </div>
   );
