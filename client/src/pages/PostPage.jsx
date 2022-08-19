@@ -1,7 +1,6 @@
 import axios from "./../utils/axios";
-import React from "react";
-import { useCallback } from "react";
-import { toast } from "react-toastify";
+import React, { useCallback, useState } from "react";
+import { removePost } from "../redux/features/post/postSlice";
 import {
   AiFillEye,
   AiOutlineMessage,
@@ -9,23 +8,46 @@ import {
   AiFillDelete,
 } from "react-icons/ai";
 import Moment from "react-moment";
-import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removePost } from "../redux/features/post/postSlice";
+import { toast } from "react-toastify";
+import {
+  createComment,
+  getPostComments,
+} from "../redux/features/comments/commentsSlice";
+import CommentItem from "../components/CommentItem";
 
 const PostPage = () => {
   const [post, setPosts] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const { comments } = useSelector((state) => state.comment);
+  const [comment, setComment] = useState("");
   const params = useParams();
+  const postId = params.id;
+
+  console.log(comments);
 
   const fetchPost = useCallback(async () => {
-    const { data } = await axios.get(`/posts/${params.id}`);
+    const { data } = await axios.get(`/posts/${postId}`);
     setPosts(data);
-  }, [params.id]);
+  }, [postId]);
+
+  const handleSubmit = () => {
+    try {
+      dispatch(createComment({ postId, comment }));
+      setComment("");
+    } catch (error) {}
+  };
+  const fetchComments = useCallback(async () => {
+    try {
+      dispatch(getPostComments(postId));
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch, postId]);
 
   const removePostHandler = () => {
     try {
@@ -36,6 +58,9 @@ const PostPage = () => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   useEffect(() => {
     fetchPost();
@@ -106,8 +131,27 @@ const PostPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-1/3 bg-gray-700 flex flex-col gap-2 rounded-sm ">
-          <form className="flex gap-2 "></form>
+        <div className="w-1/3 p-8 bg-gray-700 flex flex-col gap-2 rounded-sm ">
+          <form className="flex gap-2 " onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Comment"
+              className="text-balck w-full rounded-sm bg-gray-400 border p-2 text-xs outline-none placeholder:text-gray-700"
+            />
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="flex justify-center items-center bg-gray-600 text-white rounded-sm py-2 px-4"
+            >
+              {" "}
+              Отправить{" "}
+            </button>
+          </form>
+          {comments?.map((cmt) => (
+            <CommentItem key={cmt._id} cmt={cmt} />
+          ))}
         </div>
       </div>
     </div>
